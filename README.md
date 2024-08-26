@@ -1,4 +1,4 @@
-<img src="https://graph.org/file/7f7dcc89135e7d6c64bbb.jpg" alt="logo" target="/blank">
+l<img src="https://graph.org/file/7f7dcc89135e7d6c64bbb.jpg" alt="logo" target="/blank">
 
 <h1 align="center">
  <b><a href="https://t.me/MadflixForwardBot" target="/blank"> Ultra Forward Bot </a></>
@@ -24,7 +24,7 @@
 <summary>Deploy To Koyeb</summary>
 <p>
 <br>                 
-<a target="/blank" href="https://app.koyeb.com/deploy?type=git&repository=github.com/JishuDeveloper/Ultra-Forward-Bot&branch=main&name=ultra-forward-bot" >
+<a target="/blank" href="https://app.koyeb.com/deploy?type=git&repository=github.com/ninzagamerz/FTM-FORWARD-BOT&branch=main&name=FTM-FORWARD-BOT" >
   <img src="https://www.koyeb.com/static/images/deploy/button.svg" alt="Deploy">
 </a>
 </p>

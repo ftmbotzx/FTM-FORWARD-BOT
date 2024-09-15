@@ -6,8 +6,7 @@ COPY requirements.txt /requirements.txt
 
 RUN cd /
 RUN pip3 install -U pip && pip3 install -U -r requirements.txt
-RUN funtoonsmultimediaofficial/Ultra-Forward-Bot
-WORKDIR /Ultra-Forward-Bot
-COPY . /Ultra-Forward-Bot
-EXPOSE 8080 5001 5000 8000 80
-CMD ["python", "main.py"]
+RUN ninzagamerz /FTM-FORWARD-BOT
+WORKDIR /FTM-FORWARD-BOT
+COPY start.sh /start.sh
+CMD ["/bin/bash", "/start.sh"] 

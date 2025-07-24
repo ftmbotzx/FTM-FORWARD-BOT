@@ -100,22 +100,6 @@ async def settings_query(bot, query):
                 await msg.edit(f"❌ Login failed:\n{login_status}")
         except asyncio.exceptions.TimeoutError:
             await msg.edit("⏰ Timeout. Process cancelled.")
-    elif type == "channels":
-        buttons = []
-        channels = await db.get_user_channels(user_id)
-        for channel in channels:
-            buttons.append([InlineKeyboardButton(f"{channel['title']}",
-                             callback_data=f"settings#editchannels_{channel['chat_id']}")])
-        buttons.append([InlineKeyboardButton('✚ Add Channel ✚', 
-                          callback_data="settings#addchannel")])
-        buttons.append([InlineKeyboardButton('🔙 Back', 
-                          callback_data="settings#main")])
-        await query.message.edit_text( 
-            "<b><u>My Channels</u></b>\n\nYou Can Manage Your Target Chats In Here",
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-
-    # KEEP EVERYTHING ELSE AS IT IS (from "addchannel" onwards, already correct in your file)      
   elif type=="channels":
      buttons = []
      channels = await db.get_user_channels(user_id)

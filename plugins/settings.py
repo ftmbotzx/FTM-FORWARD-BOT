@@ -1,3 +1,4 @@
+
 import asyncio 
 from database import db
 from config import Config
@@ -24,48 +25,81 @@ async def settings(client, message):
     
 @Client.on_callback_query(filters.regex(r'^settings'))
 async def settings_query(bot, query):
-  user_id = query.from_user.id
-  i, type = query.data.split("#")
-  buttons = [[InlineKeyboardButton('🔙 Back', callback_data="settings#main")]]
-  
-  if type=="main":
-     await query.message.edit_text(
-       "<b>Change Your Settings As Your Wish</b>",
-       reply_markup=main_buttons())
-       
-  elif type=="bots":
-     buttons = [] 
-     _bot = await db.get_bot(user_id)
-     if _bot is not None:
-        buttons.append([InlineKeyboardButton(_bot['name'],
-                         callback_data=f"settings#editbot")])
-     else:
-        buttons.append([InlineKeyboardButton('✚ Add Bot ✚', 
-                         callback_data="settings#addbot")])
-        buttons.append([InlineKeyboardButton('✚ Add User Bot ✚', 
-                         callback_data="settings#adduserbot")])
-     buttons.append([InlineKeyboardButton('🔙 Back', 
-                      callback_data="settings#main")])
-     await query.message.edit_text(
-       "<b><u>My Bots</u></b>\n\nYou Can Manage Your Bots In Here",
-       reply_markup=InlineKeyboardMarkup(buttons))
-  
-  elif type=="addbot":
-     await query.message.delete()
-     bot = await CLIENT.add_bot(bot, query)
-     if bot != True: return
-     await query.message.reply_text(
-        "<b>Bot Token Successfully Added To Database</b>",
-        reply_markup=InlineKeyboardMarkup(buttons))
-  
-  elif type=="adduserbot":
-     await query.message.delete()
-     user = await CLIENT.add_session(bot, query)
-     if user != True: return
-     await query.message.reply_text(
-        "<b>Session Successfully Added To Database</b>",
-        reply_markup=InlineKeyboardMarkup(buttons))
-      
+    user_id = query.from_user.id
+    i, type = query.data.split("#")
+    buttons = [[InlineKeyboardButton('🔙 Back', callback_data="settings#main")]]
+
+    if type == "main":
+        await query.message.edit_text(
+            "<b>Change Your Settings As Your Wish</b>",
+            reply_markup=main_buttons()
+        )
+
+    elif type == "bots":
+        buttons = []
+        _bot = await db.get_bot(user_id)
+        if _bot is not None:
+            buttons.append([InlineKeyboardButton(_bot['name'],
+                             callback_data=f"settings#editbot")])
+        else:
+            buttons.append([InlineKeyboardButton('✚ Add Bot ✚',
+                             callback_data="settings#addbot")])
+            buttons.append([InlineKeyboardButton('✚ Add User Bot ✚',
+                             callback_data="settings#adduserbot")])
+        buttons.append([InlineKeyboardButton('🔙 Back',
+                          callback_data="settings#main")])
+        await query.message.edit_text(
+            "<b><u>My Bots</u></b>\n\nYou Can Manage Your Bots In Here",
+            reply_markup=InlineKeyboardMarkup(buttons)
+        )
+
+    elif type == "adduserbot":
+        await query.message.edit_text(
+            "🧩 Choose Login Method for Userbot:",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔐 Login with String Session", callback_data="settings#userbot_string")],
+                [InlineKeyboardButton("📱 Login via Phone Number", callback_data="settings#userbot_phone")],
+                [InlineKeyboardButton("⬅️ Back", callback_data="settings#main")]
+            ])
+        )
+
+    elif type == "userbot_string":
+        await query.message.delete()
+        msg = await bot.send_message(user_id, "📥 Please send your <b>Pyrogram String Session</b>.\n\n/cancel - Cancel")
+        try:
+            session = await bot.listen(user_id, timeout=300)
+            if session.text == "/cancel":
+                await msg.edit("❌ Process Cancelled.")
+                return
+            success = await CLIENT.add_session(session.text, user_id)
+            if success is not True:
+                await msg.edit(f"❌ Failed to login:\n{success}")
+            else:
+                await msg.edit("✅ Userbot successfully connected!")
+        except asyncio.exceptions.TimeoutError:
+            await msg.edit("⏰ Timeout. Process cancelled.")
+
+    elif type == "userbot_phone":
+        await query.message.delete()
+        msg = await bot.send_message(user_id, "📞 Please send your <b>phone number</b> to log in.\n\n/cancel - Cancel")
+        try:
+            phone = await bot.listen(user_id, timeout=300)
+            if phone.text == "/cancel":
+                await msg.edit("❌ Process Cancelled.")
+                return
+            result = await CLIENT.add_session(phone.text, user_id)
+            if result != True:
+                await msg.edit(f"❌ Failed to send OTP:\n{result}")
+                return
+            otp = await bot.ask(user_id, "📩 Enter the OTP you received:")
+            login_status = await CLIENT.verify_code(user_id, otp.text)
+            if login_status == True:
+                await msg.edit("✅ Userbot successfully connected!")
+            else:
+                await msg.edit(f"❌ Login failed:\n{login_status}")
+        except asyncio.exceptions.TimeoutError:
+            await msg.edit("⏰ Timeout. Process cancelled.")
+            
   elif type=="channels":
      buttons = []
      channels = await db.get_user_channels(user_id)
@@ -576,4 +610,4 @@ async def next_filters_buttons(user_id):
        InlineKeyboardButton('🔙 Back', 
                     callback_data="settings#main")
        ]]
-  return InlineKeyboardMarkup(buttons) 
+  return InlineKeyboardMarkup(buttons)

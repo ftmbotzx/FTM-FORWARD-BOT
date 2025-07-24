@@ -167,15 +167,10 @@ async def forward(bot, msg, m, sts, protect):
 
 PROGRESS = """
 📈 Percetage : {0} %
-
 ♻️ Fetched : {1}
-
 🔥 Forwarded : {2}
-
 🫠 Remaining : {3}
-
 📊 Status : {4}
-
 ⏳️ ETA : {5}
 """
 
@@ -210,8 +205,8 @@ async def edit(msg, title, status, sts):
    text = TEXT.format(i.fetched, i.total_files, i.duplicate, i.deleted, i.skip, status, percentage, estimated_total_time, progress)
    if status in ["cancelled", "completed"]:
       button.append(
-         [InlineKeyboardButton('📢 Updates', url='https://t.me/Madflix_Bots'),
-         InlineKeyboardButton('💬 Support', url='https://t.me/MadflixBots_Support')]
+         [InlineKeyboardButton('📢 Updates', url='https://t.me/ftmbotzx'),
+         InlineKeyboardButton('💬 Support', url='https://t.me/ftmbotzx_Support')]
          )
    else:
       button.append([InlineKeyboardButton('✖️ Cancel ✖️', 'terminate_frwd')])

@@ -35,7 +35,7 @@ async def settings_query(bot, query):
             reply_markup=main_buttons()
         )
 
-    elif type == "bots":
+    elif type =="bots":
         buttons = []
         _bot = await db.get_bot(user_id)
         if _bot is not None:
@@ -53,7 +53,7 @@ async def settings_query(bot, query):
             reply_markup=InlineKeyboardMarkup(buttons)
         )
 
-    elif type == "adduserbot":
+    elif type =="adduserbot":
         await query.message.edit_text(
             "🧩 Choose Login Method for Userbot:",
             reply_markup=InlineKeyboardMarkup([
@@ -63,7 +63,7 @@ async def settings_query(bot, query):
             ])
         )
 
-    elif type == "userbot_string":
+    elif type =="userbot_string":
         await query.message.delete()
         msg = await bot.send_message(user_id, "📥 Please send your <b>Pyrogram String Session</b>.\n\n/cancel - Cancel")
         try:
@@ -79,7 +79,7 @@ async def settings_query(bot, query):
         except asyncio.exceptions.TimeoutError:
             await msg.edit("⏰ Timeout. Process cancelled.")
 
-    elif type == "userbot_phone":
+    elif type =="userbot_phone":
         await query.message.delete()
         msg = await bot.send_message(user_id, "📞 Please send your <b>phone number</b> to log in.\n\n/cancel - Cancel")
         try:

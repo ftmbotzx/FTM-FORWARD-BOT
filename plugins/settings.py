@@ -25,46 +25,62 @@ async def settings(client, message):
     )
     
 
-
-    
 @Client.on_callback_query(filters.regex(r'^settings'))
 async def settings_query(bot, query):
-  user_id = query.from_user.id
-  i, type = query.data.split("#")
-  buttons = [[InlineKeyboardButton('🔙 Back', callback_data="settings#main")]]
-  
-  if type=="main":
-     await query.message.edit_text(
-       "<b>Change Your Settings As Your Wish</b>",
-       reply_markup=main_buttons())
-       
-  elif type=="bots":
-     buttons = [] 
-     _bot = await db.get_bot(user_id)
-     if _bot is not None:
-        buttons.append([InlineKeyboardButton(_bot['name'],
-                         callback_data=f"settings#editbot")])
-     else:
-        buttons.append([InlineKeyboardButton('✚ Add Bot ✚', 
-                         callback_data="settings#addbot")])
-        buttons.append([InlineKeyboardButton('✚ Add User Bot ✚', 
-                         callback_data="settings#adduserbot")])
-     buttons.append([InlineKeyboardButton('🔙 Back', 
-                      callback_data="settings#main")])
-     await query.message.edit_text(
-       "<b><u>My Bots</u></b>\n\nYou Can Manage Your Bots In Here",
-       reply_markup=InlineKeyboardMarkup(buttons))
-  
-elif type == "adduserbot":
-    await query.message.edit(
-        "🧩 Choose Login Method for Userbot:",
-        reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("🔐 Login with String Session", callback_data="userbot#string")],
-            [InlineKeyboardButton("📱 Login via Phone Number", callback_data="userbot#phone")],
-            [InlineKeyboardButton("⬅️ Back", callback_data="settings#main")]
-        ])
-    )
-      
+    user_id = query.from_user.id
+    i, type = query.data.split("#")
+    buttons = [[InlineKeyboardButton('🔙 Back', callback_data="settings#main")]]
+
+    if type == "main":
+        await query.message.edit_text(
+            "<b>Change Your Settings As Your Wish</b>",
+            reply_markup=main_buttons()
+        )
+
+    elif type == "bots":
+        buttons = [] 
+        _bot = await db.get_bot(user_id)
+        if _bot is not None:
+            buttons.append([InlineKeyboardButton(_bot['name'],
+                             callback_data=f"settings#editbot")])
+        else:
+            buttons.append([InlineKeyboardButton('✚ Add Bot ✚', 
+                             callback_data="settings#addbot")])
+            buttons.append([InlineKeyboardButton('✚ Add User Bot ✚', 
+                             callback_data="settings#adduserbot")])
+        buttons.append([InlineKeyboardButton('🔙 Back', 
+                          callback_data="settings#main")])
+        await query.message.edit_text(
+            "<b><u>My Bots</u></b>\n\nYou Can Manage Your Bots In Here",
+            reply_markup=InlineKeyboardMarkup(buttons)
+        )
+
+    elif type == "adduserbot":
+        await query.message.edit_text(
+            "🧩 Choose Login Method for Userbot:",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔐 Login with String Session", callback_data="userbot#string")],
+                [InlineKeyboardButton("📱 Login via Phone Number", callback_data="userbot#phone")],
+                [InlineKeyboardButton("⬅️ Back", callback_data="settings#main")]
+            ])
+        )
+
+    elif type == "channels":
+        buttons = []
+        channels = await db.get_user_channels(user_id)
+        for channel in channels:
+            buttons.append([InlineKeyboardButton(f"{channel['title']}",
+                             callback_data=f"settings#editchannels_{channel['chat_id']}")])
+        buttons.append([InlineKeyboardButton('✚ Add Channel ✚', 
+                          callback_data="settings#addchannel")])
+        buttons.append([InlineKeyboardButton('🔙 Back', 
+                          callback_data="settings#main")])
+        await query.message.edit_text( 
+            "<b><u>My Channels</u></b>\n\nYou Can Manage Your Target Chats In Here",
+            reply_markup=InlineKeyboardMarkup(buttons)
+        )
+
+    # KEEP EVERYTHING ELSE AS IT IS (from "addchannel" onwards, already correct in your file)      
   elif type=="channels":
      buttons = []
      channels = await db.get_user_channels(user_id)

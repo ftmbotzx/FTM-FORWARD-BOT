@@ -100,7 +100,7 @@ async def settings_query(bot, query):
         except asyncio.exceptions.TimeoutError:
             await msg.edit("⏰ Timeout. Process cancelled.")
             
-  elif type=="channels":
+    elif type=="channels":
      buttons = []
      channels = await db.get_user_channels(user_id)
      for channel in channels:

@@ -1,12 +1,3 @@
-# Jishu Developer 
-# Don't Remove Credit 🥺
-# Telegram Channel @Madflix_Bots
-# Backup Channel @JishuBotz
-# Developer @JishuDeveloper
-
-
-
-
 import asyncio 
 from database import db
 from config import Config
@@ -33,80 +24,47 @@ async def settings(client, message):
     
 @Client.on_callback_query(filters.regex(r'^settings'))
 async def settings_query(bot, query):
-    user_id = query.from_user.id
-    i, type = query.data.split("#")
-    buttons = [[InlineKeyboardButton('🔙 Back', callback_data="settings#main")]]
-
-    if type == "main":
-        await query.message.edit_text(
-            "<b>Change Your Settings As Your Wish</b>",
-            reply_markup=main_buttons()
-        )
-
-    elif type == "bots":
-        buttons = []
-        _bot = await db.get_bot(user_id)
-        if _bot is not None:
-            buttons.append([InlineKeyboardButton(_bot['name'],
-                             callback_data=f"settings#editbot")])
-        else:
-            buttons.append([InlineKeyboardButton('✚ Add Bot ✚',
-                             callback_data="settings#addbot")])
-            buttons.append([InlineKeyboardButton('✚ Add User Bot ✚',
-                             callback_data="settings#adduserbot")])
-        buttons.append([InlineKeyboardButton('🔙 Back',
-                          callback_data="settings#main")])
-        await query.message.edit_text(
-            "<b><u>My Bots</u></b>\n\nYou Can Manage Your Bots In Here",
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-
-    elif type == "adduserbot":
-        await query.message.edit_text(
-            "🧩 Choose Login Method for Userbot:",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔐 Login with String Session", callback_data="settings#userbot_string")],
-                [InlineKeyboardButton("📱 Login via Phone Number", callback_data="settings#userbot_phone")],
-                [InlineKeyboardButton("⬅️ Back", callback_data="settings#main")]
-            ])
-        )
-
-    elif type == "userbot_string":
-        await query.message.delete()
-        msg = await bot.send_message(user_id, "📥 Please send your <b>Pyrogram String Session</b>.\n\n/cancel - Cancel")
-        try:
-            session = await bot.listen(user_id, timeout=300)
-            if session.text == "/cancel":
-                await msg.edit("❌ Process Cancelled.")
-                return
-            success = await CLIENT.add_session(session.text, user_id)
-            if success is not True:
-                await msg.edit(f"❌ Failed to login:\n{success}")
-            else:
-                await msg.edit("✅ Userbot successfully connected!")
-        except asyncio.exceptions.TimeoutError:
-            await msg.edit("⏰ Timeout. Process cancelled.")
-
-    elif type == "userbot_phone":
-        await query.message.delete()
-        msg = await bot.send_message(user_id, "📞 Please send your <b>phone number</b> to log in.\n\n/cancel - Cancel")
-        try:
-            phone = await bot.listen(user_id, timeout=300)
-            if phone.text == "/cancel":
-                await msg.edit("❌ Process Cancelled.")
-                return
-            result = await CLIENT.add_session(phone.text, user_id)
-            if result != True:
-                await msg.edit(f"❌ Failed to send OTP:\n{result}")
-                return
-            otp = await bot.ask(user_id, "📩 Enter the OTP you received:")
-            login_status = await CLIENT.verify_code(user_id, otp.text)
-            if login_status == True:
-                await msg.edit("✅ Userbot successfully connected!")
-            else:
-                await msg.edit(f"❌ Login failed:\n{login_status}")
-        except asyncio.exceptions.TimeoutError:
-            await msg.edit("⏰ Timeout. Process cancelled.")
+  user_id = query.from_user.id
+  i, type = query.data.split("#")
+  buttons = [[InlineKeyboardButton('🔙 Back', callback_data="settings#main")]]
+  
+  if type=="main":
+     await query.message.edit_text(
+       "<b>Change Your Settings As Your Wish</b>",
+       reply_markup=main_buttons())
+       
+  elif type=="bots":
+     buttons = [] 
+     _bot = await db.get_bot(user_id)
+     if _bot is not None:
+        buttons.append([InlineKeyboardButton(_bot['name'],
+                         callback_data=f"settings#editbot")])
+     else:
+        buttons.append([InlineKeyboardButton('✚ Add Bot ✚', 
+                         callback_data="settings#addbot")])
+        buttons.append([InlineKeyboardButton('✚ Add User Bot ✚', 
+                         callback_data="settings#adduserbot")])
+     buttons.append([InlineKeyboardButton('🔙 Back', 
+                      callback_data="settings#main")])
+     await query.message.edit_text(
+       "<b><u>My Bots</u></b>\n\nYou Can Manage Your Bots In Here",
+       reply_markup=InlineKeyboardMarkup(buttons))
+  
+  elif type=="addbot":
+     await query.message.delete()
+     bot = await CLIENT.add_bot(bot, query)
+     if bot != True: return
+     await query.message.reply_text(
+        "<b>Bot Token Successfully Added To Database</b>",
+        reply_markup=InlineKeyboardMarkup(buttons))
+  
+  elif type=="adduserbot":
+     await query.message.delete()
+     user = await CLIENT.add_session(bot, query)
+     if user != True: return
+     await query.message.reply_text(
+        "<b>Session Successfully Added To Database</b>",
+        reply_markup=InlineKeyboardMarkup(buttons))
       
   elif type=="channels":
      buttons = []
@@ -497,4 +455,125 @@ def extract_btn(datas):
 def size_button(size):
   buttons = [[
        InlineKeyboardButton('+',
+                    callback_data=f'settings#update_limit-True-{size}'),
+       InlineKeyboardButton('=',
+                    callback_data=f'settings#update_limit-None-{size}'),
+       InlineKeyboardButton('-',
+                    callback_data=f'settings#update_limit-False-{size}')
+       ],[
+       InlineKeyboardButton('+1',
+                    callback_data=f'settings#update_size-{size + 1}'),
+       InlineKeyboardButton('-1',
+                    callback_data=f'settings#update_size_-{size - 1}')
+       ],[
+       InlineKeyboardButton('+5',
+                    callback_data=f'settings#update_size-{size + 5}'),
+       InlineKeyboardButton('-5',
+                    callback_data=f'settings#update_size_-{size - 5}')
+       ],[
+       InlineKeyboardButton('+10',
+                    callback_data=f'settings#update_size-{size + 10}'),
+       InlineKeyboardButton('-10',
+                    callback_data=f'settings#update_size_-{size - 10}')
+       ],[
+       InlineKeyboardButton('+50',
+                    callback_data=f'settings#update_size-{size + 50}'),
+       InlineKeyboardButton('-50',
+                    callback_data=f'settings#update_size_-{size - 50}')
+       ],[
+       InlineKeyboardButton('+100',
+                    callback_data=f'settings#update_size-{size + 100}'),
+       InlineKeyboardButton('-100',
+                    callback_data=f'settings#update_size_-{size - 100}')
+       ],[
+       InlineKeyboardButton('↩ Back',
+                    callback_data="settings#main")
+     ]]
+  return InlineKeyboardMarkup(buttons)
        
+async def filters_buttons(user_id):
+  filter = await get_configs(user_id)
+  filters = filter['filters']
+  buttons = [[
+       InlineKeyboardButton('🏷️ Forward Tag',
+                    callback_data=f'settings_#updatefilter-forward_tag-{filter["forward_tag"]}'),
+       InlineKeyboardButton('✅' if filter['forward_tag'] else '❌',
+                    callback_data=f'settings#updatefilter-forward_tag-{filter["forward_tag"]}')
+       ],[
+       InlineKeyboardButton('🖍️ Texts',
+                    callback_data=f'settings_#updatefilter-text-{filters["text"]}'),
+       InlineKeyboardButton('✅' if filters['text'] else '❌',
+                    callback_data=f'settings#updatefilter-text-{filters["text"]}')
+       ],[
+       InlineKeyboardButton('📁 Documents',
+                    callback_data=f'settings_#updatefilter-document-{filters["document"]}'),
+       InlineKeyboardButton('✅' if filters['document'] else '❌',
+                    callback_data=f'settings#updatefilter-document-{filters["document"]}')
+       ],[
+       InlineKeyboardButton('🎞️ Videos',
+                    callback_data=f'settings_#updatefilter-video-{filters["video"]}'),
+       InlineKeyboardButton('✅' if filters['video'] else '❌',
+                    callback_data=f'settings#updatefilter-video-{filters["video"]}')
+       ],[
+       InlineKeyboardButton('📷 Photos',
+                    callback_data=f'settings_#updatefilter-photo-{filters["photo"]}'),
+       InlineKeyboardButton('✅' if filters['photo'] else '❌',
+                    callback_data=f'settings#updatefilter-photo-{filters["photo"]}')
+       ],[
+       InlineKeyboardButton('🎧 Audios',
+                    callback_data=f'settings_#updatefilter-audio-{filters["audio"]}'),
+       InlineKeyboardButton('✅' if filters['audio'] else '❌',
+                    callback_data=f'settings#updatefilter-audio-{filters["audio"]}')
+       ],[
+       InlineKeyboardButton('🎤 Voices',
+                    callback_data=f'settings_#updatefilter-voice-{filters["voice"]}'),
+       InlineKeyboardButton('✅' if filters['voice'] else '❌',
+                    callback_data=f'settings#updatefilter-voice-{filters["voice"]}')
+       ],[
+       InlineKeyboardButton('🎭 Animations',
+                    callback_data=f'settings_#updatefilter-animation-{filters["animation"]}'),
+       InlineKeyboardButton('✅' if filters['animation'] else '❌',
+                    callback_data=f'settings#updatefilter-animation-{filters["animation"]}')
+       ],[
+       InlineKeyboardButton('🃏 Stickers',
+                    callback_data=f'settings_#updatefilter-sticker-{filters["sticker"]}'),
+       InlineKeyboardButton('✅' if filters['sticker'] else '❌',
+                    callback_data=f'settings#updatefilter-sticker-{filters["sticker"]}')
+       ],[
+       InlineKeyboardButton('▶️ Skip Duplicate',
+                    callback_data=f'settings_#updatefilter-duplicate-{filter["duplicate"]}'),
+       InlineKeyboardButton('✅' if filter['duplicate'] else '❌',
+                    callback_data=f'settings#updatefilter-duplicate-{filter["duplicate"]}')
+       ],[
+       InlineKeyboardButton('🔙 back',
+                    callback_data="settings#main")
+       ]]
+  return InlineKeyboardMarkup(buttons) 
+
+async def next_filters_buttons(user_id):
+  filter = await get_configs(user_id)
+  filters = filter['filters']
+  buttons = [[
+       InlineKeyboardButton('📊 Poll',
+                    callback_data=f'settings_#updatefilter-poll-{filters["poll"]}'),
+       InlineKeyboardButton('✅' if filters['poll'] else '❌',
+                    callback_data=f'settings#updatefilter-poll-{filters["poll"]}')
+       ],[
+       InlineKeyboardButton('🔒 Secure Message',
+                    callback_data=f'settings_#updatefilter-protect-{filter["protect"]}'),
+       InlineKeyboardButton('✅' if filter['protect'] else '❌',
+                    callback_data=f'settings#updatefilter-protect-{filter["protect"]}')
+       ],[
+       InlineKeyboardButton('🛑 Size Limit',
+                    callback_data='settings#file_size')
+       ],[
+       InlineKeyboardButton('💾 Extension',
+                    callback_data='settings#get_extension')
+       ],[
+       InlineKeyboardButton('📌 Keywords',
+                    callback_data='settings#get_keyword')
+       ],[
+       InlineKeyboardButton('🔙 Back', 
+                    callback_data="settings#main")
+       ]]
+  return InlineKeyboardMarkup(buttons) 

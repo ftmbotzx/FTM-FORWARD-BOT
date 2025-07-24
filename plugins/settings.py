@@ -342,7 +342,7 @@ async def settings_query(bot, query):
      await query.edit_message_reply_markup(
         reply_markup=await filters_buttons(user_id))
    
-elif type.startswith("file_size"):
+    elif type.startswith("file_size"):
         settings = await get_configs(user_id)
         size = settings.get('file_size', 0)
         i, limit = size_limit(settings['size_limit'])

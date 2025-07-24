@@ -19,7 +19,7 @@ class Translation(object):
   
 ➻ Click Help Button To Know More About Me
   
-<b>Bot Is Made By @Madflix_Bots</b>"""
+<b>Bot Is Made By @ftmdeveloperz</b>"""
 
 
   HELP_TXT = """<b><u>🛠️ Help</b></u>
@@ -54,17 +54,15 @@ class Translation(object):
 <b>📝 Language :</b> <a href='https://python.org'>Python 3</a>
 <b>📚 Library :</b> <a href='https://pyrogram.org'>Pyrogram 2.0</a>
 <b>🚀 Server :</b> <a href='https://heroku.com'>Heroku</a>
-<b>📢 Channel :</b> <a href='https://t.me/Madflix_Bots'>Madflix Botz</a>
-<b>🧑‍💻 Developer :</b> <a href='https://t.me/CallAdminRobot'>Jishu Developer</a>
+<b>📢 Channel :</b> <a href='https://t.me/ftmbotzx'>Fᴛᴍʙᴏᴛᴢx</a>
+<b>🧑‍💻 Developer :</b> <a href='https://t.me/ftmdeveloperz'>Fᴛᴍ Dᴇᴠᴇʟᴏᴘᴇʀᴢ</a>
 
-<b>♻️ Bot Made By :</b> @Madflix_Bots"""
+<b>♻️ Bot Made By :</b> @ftmdeveloperz"""
   
   STATUS_TXT = """<b><u>Bot Status</u></b>
   
 <b>👱 Total Users :</b> <code>{}</code>
-
 <b>🤖 Total Bots :</b> <code>{}</code>
-
 <b>🔃 Forwardings :</b> <code>{}</code>
 """
   
@@ -78,19 +76,12 @@ class Translation(object):
   TEXT = """<b><u>Forward Status</u></b>
   
 <b>🕵 Fetch Message :</b> <code>{}</code>
-
 <b>✅ Successfully Forward :</b> <code>{}</code>
-
 <b>👥 Dublicate Message :</b> <code>{}</code>
-
 <b>🗑 Deleted Message :</b> <code>{}</code>
-
 <b>🪆 Skipped Message :</b> <code>{}</code>
-
 <b>🔁 Filtered Message :</b> <code>{}</code>
-
 <b>📊 Current Status :</b> <code>{}</code>
-
 <b>🔥 Percentage :</b> <code>{}</code> %
 
 {}
@@ -99,19 +90,12 @@ class Translation(object):
   TEXT1 = """<b><u>Forwarded Status</u></b>
 
 <b>🕵 Fetched Message :</b> <code>{}</code>
-
 <b>✅ Successfully Forward :</b> <code>{}</code>
-
 <b>👥 Dublicate Message :</b> <code>{}</code>
-
 <b>🗑 Deleted Message :</b> <code>{}</code>
-
 <b>🪆 Skipped :</b> <code>{}</code>
-
 <b>📊 Stats :</b> <code>{}</code>
-
 <b>⏳ Progress :</b> <code>{}</code>
-
 <b>⏰ ETA :</b> <code>{}</code>
 
 {}"""
@@ -119,7 +103,6 @@ class Translation(object):
   DUPLICATE_TEXT = """<b><u>Unequify Status</u></b>
 
 <b>🕵 Fetched Files :</b> <code>{}</code>
-
 <b>👥 Dublicate Deleted :</b> <code>{}</code>
 
 {}

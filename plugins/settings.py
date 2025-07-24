@@ -1,8 +1,3 @@
-# Jishu Developer 
-# Don't Remove Credit 🥺
-# Telegram Channel @Madflix_Bots
-# Backup Channel @JishuBotz
-# Developer @JishuDeveloper
 
 
 
@@ -12,6 +7,7 @@ from database import db
 from config import Config
 from translation import Translation
 from pyrogram import Client, filters
+from userbot import start_userbot
 from .test import get_configs, update_configs, CLIENT, parse_buttons
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -59,21 +55,15 @@ async def settings_query(bot, query):
        "<b><u>My Bots</u></b>\n\nYou Can Manage Your Bots In Here",
        reply_markup=InlineKeyboardMarkup(buttons))
   
-  elif type=="addbot":
-     await query.message.delete()
-     bot = await CLIENT.add_bot(bot, query)
-     if bot != True: return
-     await query.message.reply_text(
-        "<b>Bot Token Successfully Added To Database</b>",
-        reply_markup=InlineKeyboardMarkup(buttons))
-  
-  elif type=="adduserbot":
-     await query.message.delete()
-     user = await CLIENT.add_session(bot, query)
-     if user != True: return
-     await query.message.reply_text(
-        "<b>Session Successfully Added To Database</b>",
-        reply_markup=InlineKeyboardMarkup(buttons))
+elif type == "adduserbot":
+    await query.message.edit(
+        "🧩 Choose Login Method for Userbot:",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔐 Login with String Session", callback_data="userbot#string")],
+            [InlineKeyboardButton("📱 Login via Phone Number", callback_data="userbot#phone")],
+            [InlineKeyboardButton("⬅️ Back", callback_data="settings#main")]
+        ])
+    )
       
   elif type=="channels":
      buttons = []

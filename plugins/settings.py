@@ -342,14 +342,14 @@ async def settings_query(bot, query):
      await query.edit_message_reply_markup(
         reply_markup=await filters_buttons(user_id))
    
-    elif type.startswith("file_size"):
-    settings = await get_configs(user_id)
-    size = settings.get('file_size', 0)
-    i, limit = size_limit(settings['size_limit'])
-    await query.message.edit_text(
-       f'<b><u>Size Limit</u></b>\n\nYou Can Set File Size Limit To Forward\n\nStatus : Files With {limit} `{size} MB` Will Forward',
-       reply_markup=size_button(size))
-  
+elif type.startswith("file_size"):
+        settings = await get_configs(user_id)
+        size = settings.get('file_size', 0)
+        i, limit = size_limit(settings['size_limit'])
+        await query.message.edit_text(
+            f'<b><u>Size Limit</u></b>\n\nYou Can Set File Size Limit To Forward\n\nStatus : Files With {limit} `{size} MB` Will Forward',
+            reply_markup=size_button(size)
+        )  
     elif type.startswith("update_size"):
     size = int(query.data.split('-')[1])
     if 0 < size > 2000:
